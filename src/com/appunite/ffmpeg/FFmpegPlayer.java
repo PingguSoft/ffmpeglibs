@@ -78,15 +78,7 @@ public class FFmpegPlayer {
 			int videoStreamNo = videoStream == null ? -1 : videoStream.intValue();
 			int audioStreamNo = audioStream == null ? -1 : audioStream.intValue();
 			int subtitleStreamNo = subtitleStream == null ? -1 : subtitleStream.intValue();
-			
-			if (url.startsWith("rtsp")) {
-			    map.put("analyzeduration", "30000");
-			    map.put("probesize", "30000");
-			    //map.put("fpsprobesize", "5");
-			    map.put("nobuffer", "1");
-			    map.put("max_delay", "50000");
-			    //map.put("flush_packets", "1");
-			} 
+
 
 			int err = player.setDataSourceNative(url, map, videoStreamNo, audioStreamNo, subtitleStreamNo);
 			SetDataSourceTaskResult result = new SetDataSourceTaskResult();
@@ -208,7 +200,7 @@ public class FFmpegPlayer {
 	private final RenderedFrame mRenderedFrame = new RenderedFrame();
 
 	private int mNativePlayer;
-	private final Activity activity;
+	//private final Activity activity;
 
 	private Runnable updateTimeRunnable = new Runnable() {
 
@@ -233,8 +225,8 @@ public class FFmpegPlayer {
 		public int width;
 	}
 
-	public FFmpegPlayer(FFmpegDisplay videoView, Activity activity) {
-		this.activity = activity;
+	public FFmpegPlayer(FFmpegDisplay videoView) { //, Activity activity) {
+		//this.activity = activity;
 		int error = initNative();
 		if (error != 0)
 			throw new RuntimeException(String.format(
@@ -313,6 +305,8 @@ public class FFmpegPlayer {
 				Bitmap.Config.ARGB_8888);
 		this.mRenderedFrame.height = height;
 		this.mRenderedFrame.width = width;
+		Log.i("ffmpeg", "frame:" + width + "x" + height);
+		
 		return bitmap;
 	}
 
@@ -321,11 +315,11 @@ public class FFmpegPlayer {
 		this.mCurrentTimeUs = currentUs;
 		this.mVideoDurationUs = maxUs;
 		this.mIsFinished  = isFinished;
-		activity.runOnUiThread(updateTimeRunnable);
+		//activity.runOnUiThread(updateTimeRunnable);
 	}
 	
     private void onUpdateVideo(long currentUs) {
-        Log.i("ffmpeg", "onUpdateVideo:" + currentUs);
+        //Log.i("ffmpeg", "onUpdateVideo:" + currentUs);
     }
 
 	private AudioTrack prepareAudioTrack(int sampleRateInHz,
