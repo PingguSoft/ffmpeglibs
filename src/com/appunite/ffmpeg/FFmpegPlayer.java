@@ -30,6 +30,15 @@ import android.util.Log;
 import android.view.Surface;
 
 public class FFmpegPlayer {
+    public static int AV_LOG_QUIET   = -8;
+    public static int AV_LOG_PANIC   = 0;
+    public static int AV_LOG_FATAL   = 8;
+    public static int AV_LOG_ERROR   = 16;
+    public static int AV_LOG_WARNING = 24;
+    public static int AV_LOG_INFO    = 32;
+    public static int AV_LOG_VERBOSE = 40;
+    public static int AV_LOG_DEBUG   = 48;
+    
 	private static class StopTask extends AsyncTask<Void, Void, Void> {
 
 		private final FFmpegPlayer player;
@@ -225,9 +234,9 @@ public class FFmpegPlayer {
 		public int width;
 	}
 
-	public FFmpegPlayer(FFmpegDisplay videoView) { //, Activity activity) {
+	public FFmpegPlayer(FFmpegDisplay videoView, int loglevel) { //, Activity activity) {
 		//this.activity = activity;
-		int error = initNative();
+		int error = initNative(loglevel);
 		if (error != 0)
 			throw new RuntimeException(String.format(
 					"Could not initialize player: %d", error));
@@ -240,7 +249,7 @@ public class FFmpegPlayer {
 		super.finalize();
 	}
 
-	private native int initNative();
+	private native int initNative(int loglevel);
 
 	private native void deallocNative();
 
