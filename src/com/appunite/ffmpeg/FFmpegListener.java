@@ -30,5 +30,7 @@ public interface FFmpegListener {
 	void onFFUpdateTime(long mCurrentTimeUs, long mVideoDurationUs, boolean isFinished);
 
 	void onFFSeeked(NotPlayingException result);
+	
+	void onVideoSizeChanged(int width, int height);
 
 }

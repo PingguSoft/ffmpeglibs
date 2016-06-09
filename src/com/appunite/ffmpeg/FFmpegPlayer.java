@@ -327,8 +327,16 @@ public class FFmpegPlayer {
 		//activity.runOnUiThread(updateTimeRunnable);
 	}
 	
-    private void onUpdateVideo(long currentUs) {
-        //Log.i("ffmpeg", "onUpdateVideo:" + currentUs);
+	private int mVidWidth = 0;
+	private int mVidHeight = 0;
+	
+    private void onUpdateVideo(int width, int height, long currentUs) {
+        //Log.i("ffmpeg", "frame:" + width + "x" + height + ", ts:" + currentUs);
+        if (mpegListener != null && (width != mVidWidth || height != mVidHeight)) {
+            mpegListener.onVideoSizeChanged(width, height);
+            mVidWidth  = width;
+            mVidHeight = height;
+        }
     }
 
 	private AudioTrack prepareAudioTrack(int sampleRateInHz,
