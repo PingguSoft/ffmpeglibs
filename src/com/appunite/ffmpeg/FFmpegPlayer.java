@@ -190,6 +190,7 @@ public class FFmpegPlayer {
 		}
 
 	}
+	
 
 	static {
 		NativeTester nativeTester = new NativeTester();
@@ -268,6 +269,8 @@ public class FFmpegPlayer {
 	private native long getVideoDurationNative();
 	
 	public native void render(Surface surface);
+	
+	public native Bitmap getVideoBitmapNative();
 
 	/**
 	 * 
@@ -407,4 +410,7 @@ public class FFmpegPlayer {
 		this.mpegListener = mpegListener;
 	}
 	
+	public Bitmap captureVideoFrame() {
+	    return getVideoBitmapNative();
+	}
 }
