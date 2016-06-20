@@ -328,6 +328,11 @@ public class FFmpegPlayer {
 		this.mVideoDurationUs = maxUs;
 		this.mIsFinished  = isFinished;
 		//activity.runOnUiThread(updateTimeRunnable);
+		
+		if (mpegListener != null) {
+            mpegListener.onFFUpdateTime(mCurrentTimeUs,
+                mVideoDurationUs, mIsFinished);
+		}
 	}
 	
 	private int mVidWidth = 0;
