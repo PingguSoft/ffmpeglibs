@@ -77,27 +77,28 @@ public class FFmpegPlayer {
 
         @Override
         protected SetDataSourceTaskResult doInBackground(Object... params) {
-            Boolean isFD = (Boolean) params[0];
+            final Boolean isFD = (Boolean) params[0];
             //String url = (String) params[1];
             @SuppressWarnings("unchecked")
+            final
             Map<String, String> map = (Map<String, String>) params[2];
-            Integer videoStream = (Integer) params[3];
-            Integer audioStream = (Integer) params[4];
-            Integer subtitleStream = (Integer) params[5];
+            final Integer videoStream = (Integer) params[3];
+            final Integer audioStream = (Integer) params[4];
+            final Integer subtitleStream = (Integer) params[5];
 
-            int videoStreamNo = videoStream == null ? -1 : videoStream.intValue();
-            int audioStreamNo = audioStream == null ? -1 : audioStream.intValue();
-            int subtitleStreamNo = subtitleStream == null ? -1 : subtitleStream.intValue();
+            final int videoStreamNo = videoStream == null ? -1 : videoStream.intValue();
+            final int audioStreamNo = audioStream == null ? -1 : audioStream.intValue();
+            final int subtitleStreamNo = subtitleStream == null ? -1 : subtitleStream.intValue();
 
             int err;
             if (isFD) {
-                FileDescriptor fd = (FileDescriptor)params[1];
+                final FileDescriptor fd = (FileDescriptor)params[1];
                 err = player.setDataSourceFDNative(fd, map, videoStreamNo, audioStreamNo, subtitleStreamNo);
             } else {
-                String url = (String) params[1];
+                final String url = (String) params[1];
                 err = player.setDataSourceNative(url, map, videoStreamNo, audioStreamNo, subtitleStreamNo);
             }
-            SetDataSourceTaskResult result = new SetDataSourceTaskResult();
+            final SetDataSourceTaskResult result = new SetDataSourceTaskResult();
             if (err < 0) {
                 result.error = new FFmpegError(err);
                 result.streams = null;
@@ -130,7 +131,7 @@ public class FFmpegPlayer {
         protected NotPlayingException doInBackground(Long... params) {
             try {
                 player.seekNative(params[0].longValue());
-            } catch (NotPlayingException e) {
+            } catch (final NotPlayingException e) {
                 return e;
             }
             return null;
@@ -158,7 +159,7 @@ public class FFmpegPlayer {
             try {
                 player.pauseNative();
                 return null;
-            } catch (NotPlayingException e) {
+            } catch (final NotPlayingException e) {
                 return e;
             }
         }
@@ -185,7 +186,7 @@ public class FFmpegPlayer {
             try {
                 player.resumeNative();
                 return null;
-            } catch (NotPlayingException e) {
+            } catch (final NotPlayingException e) {
                 return e;
             }
         }
@@ -200,7 +201,7 @@ public class FFmpegPlayer {
 
 
     static {
-        NativeTester nativeTester = new NativeTester();
+        final NativeTester nativeTester = new NativeTester();
         if (nativeTester.isNeon()) {
             Log.i("ffmpeg", "NEON LIB LOADED!!!");
             System.loadLibrary("ffmpeg-neon");
@@ -219,7 +220,7 @@ public class FFmpegPlayer {
     private int mNativePlayer;
     //private final Activity activity;
 
-    private Runnable updateTimeRunnable = new Runnable() {
+    private final Runnable updateTimeRunnable = new Runnable() {
 
         @Override
         public void run() {
@@ -244,7 +245,7 @@ public class FFmpegPlayer {
 
     public FFmpegPlayer(FFmpegDisplay videoView, int loglevel) { //, Activity activity) {
         //this.activity = activity;
-        int error = initNative(loglevel);
+        final int error = initNative(loglevel);
         if (error != 0)
             throw new RuntimeException(String.format(
                     "Could not initialize player: %d", error));
@@ -328,7 +329,7 @@ public class FFmpegPlayer {
     private Bitmap prepareFrame(int width, int height) {
         // Bitmap bitmap =
         // Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Bitmap bitmap = Bitmap.createBitmap(width, height,
+        final Bitmap bitmap = Bitmap.createBitmap(width, height,
                 Bitmap.Config.ARGB_8888);
         mRenderedFrame.height = height;
         mRenderedFrame.width = width;
@@ -388,14 +389,14 @@ public class FFmpegPlayer {
                 channelConfig = AudioFormat.CHANNEL_OUT_STEREO;
             }
             try {
-                int minBufferSize = AudioTrack.getMinBufferSize(sampleRateInHz,
+                final int minBufferSize = AudioTrack.getMinBufferSize(sampleRateInHz,
                         channelConfig, AudioFormat.ENCODING_PCM_16BIT);
-                AudioTrack audioTrack = new AudioTrack(
+                final AudioTrack audioTrack = new AudioTrack(
                         AudioManager.STREAM_MUSIC, sampleRateInHz,
                         channelConfig, AudioFormat.ENCODING_PCM_16BIT,
                         minBufferSize, AudioTrack.MODE_STREAM);
                 return audioTrack;
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 if (numberOfChannels > 2) {
                     numberOfChannels = 2;
                 } else if (numberOfChannels > 1) {
